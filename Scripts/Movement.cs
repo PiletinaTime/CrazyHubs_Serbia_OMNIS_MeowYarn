@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        
     }
     private void Update()
     {
@@ -16,7 +17,7 @@ public class Movement : MonoBehaviour
     }
     private void Move()
     {
-        if (Settings.startGame)
+        if (GameManager.startGame)
         {
             if (Input.touchCount > 0)
             {
@@ -27,25 +28,19 @@ public class Movement : MonoBehaviour
                         newPosition = Vector3.right * (touch.deltaPosition.x * speedModifier * Time.deltaTime);
                         break;
                     case TouchPhase.Ended:
-                        newPosition.x = 0;
-                        break;
                     case TouchPhase.Stationary:
                         newPosition.x = 0;
                         break;
                 }
-                rb.velocity = Vector3.ClampMagnitude(new Vector3(newPosition.x, rb.velocity.y, 0), 60f);
+                rb.velocity = Vector3.ClampMagnitude(new Vector3(newPosition.x, rb.velocity.y, rb.velocity.z), 60f);
             }
             MoveForward();
-            RotateYarn();
         }
     }
     private void MoveForward()
     {
-        Vector3 move = (Vector3.forward) * speed * Time.deltaTime;
-        transform.Translate(move);
-    }
-    private void RotateYarn()
-    {
-        transform.GetChild(1).Rotate(2f, 0, 0);
+        rb.AddForce(Vector3.forward * 15000 * Time.deltaTime);
+        if (rb.velocity.z > speed)
+            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, speed);
     }
 }

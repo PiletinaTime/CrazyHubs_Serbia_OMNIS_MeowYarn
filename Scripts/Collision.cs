@@ -4,12 +4,15 @@ using UnityEngine;
 public class Collision : MonoBehaviour
 {
     private Renderer rend, rend1;
+    [SerializeField]
+    private Transform Cat;
     private bool ableToCollide = true;
     public static bool finish;
+    public static int collectibleValue = 30;
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        rend1 = transform.parent.GetComponent<Renderer>();
+        rend = Cat.GetComponent<Renderer>();
+        rend1 = transform.GetComponent<Renderer>();
         finish = false;
     }
     IEnumerator CharacterBlink(int numBlinks, float seconds)
@@ -21,9 +24,7 @@ public class Collision : MonoBehaviour
             rend1.enabled = !rend1.enabled;
             yield return new WaitForSeconds(seconds);
         }
-        rend.enabled = true;
-        rend1.enabled = true;
-        ableToCollide = true;
+        rend.enabled = rend1.enabled = ableToCollide = true;
     }
     public IEnumerator MoveTrap(GameObject obj, Vector3 destination)
     {
@@ -38,21 +39,20 @@ public class Collision : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Health health = transform.GetComponent<Health>();
         if (other.CompareTag("Point"))
         {
-            health.ChangeValue(40);
+            Health.ChangeValue(collectibleValue);
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Needles") && ableToCollide)
         {
-            health.ChangeValue(-80);
+            Health.ChangeValue(-45);
             StartCoroutine(CharacterBlink(4, 0.2f));
             Handheld.Vibrate();
         }
         else if ((other.CompareTag("Blades") || other.CompareTag("Obstacle")) && ableToCollide)
         {
-            health.ChangeValue(-40);
+            Health.ChangeValue(-25);
             StartCoroutine(CharacterBlink(4, 0.2f));
             Handheld.Vibrate();
         }
@@ -62,16 +62,12 @@ public class Collision : MonoBehaviour
         }
         else if (other.CompareTag("Finish"))
         {
-            StartCoroutine(health.ReduceHealthGradually(45));
-        }
-        else if (other.CompareTag("OutOfBounds"))
-        {
-            transform.parent.parent.GetComponent<Settings>().GameOver();
+            StartCoroutine(Health.ReduceHealthGradually(40));
         }
         else if (other.CompareTag("Multiplier"))
         {
             finish = true;
-            StopCoroutine(health.reduceHP);
+            StopCoroutine(Health.reduceHP);
             Movement.speed = 10;
         }
     }

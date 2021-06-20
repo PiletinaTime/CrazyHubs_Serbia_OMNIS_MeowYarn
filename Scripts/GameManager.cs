@@ -1,21 +1,23 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Settings : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject settings;
     [SerializeField]
-    private GameObject finish;
-    [SerializeField]
-    private GameObject gameover;
-    [SerializeField]
     private GameObject PressAnywhere;
     private bool Paused;
+    private static GameObject canvas;
+    private static GameObject gameover;
+    private static GameObject finish;
     public static bool startGame;
-    private void Start()
+    private void Awake()
     {
         startGame = false;
+        canvas = GameObject.Find("Canvas");
+        gameover = canvas.transform.Find("GameOver").gameObject;
+        finish = canvas.transform.Find("Finish").gameObject;
     }
     private void Update()
     {
@@ -25,8 +27,7 @@ public class Settings : MonoBehaviour
             {
                 PressAnywhere.SetActive(false);
                 startGame = true;
-                Health health = transform.GetChild(0).GetChild(1).GetComponent<Health>();
-                health.reduceHP = StartCoroutine(health.ReduceHealthGradually(10));
+                Health.reduceHP = StartCoroutine(Health.ReduceHealthGradually(10));
             }
         }
     }
@@ -48,12 +49,12 @@ public class Settings : MonoBehaviour
             }
         }
     }
-    public void Finish()
+    public static void Finish()
     {
-        finish.SetActive(true);
         Time.timeScale = 0.0f;
+        finish.SetActive(true);
     }
-    public void GameOver()
+    public static void GameOver()
     {
         Time.timeScale = 0.0f;
         gameover.SetActive(true);
@@ -62,6 +63,5 @@ public class Settings : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
-
     }
 }
