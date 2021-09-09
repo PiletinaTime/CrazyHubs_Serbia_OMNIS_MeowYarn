@@ -8,7 +8,7 @@ public class Collision : MonoBehaviour
     private Transform Cat;
     private bool ableToCollide = true;
     public static bool finish;
-    public static int collectibleValue = 30;
+    public static float collectibleValue = 30;
     void Start()
     {
         rend = Cat.GetComponent<Renderer>();
@@ -20,8 +20,7 @@ public class Collision : MonoBehaviour
         ableToCollide = false;
         for (int i = 0; i < numBlinks * 2; i++)
         {
-            rend.enabled = !rend.enabled;
-            rend1.enabled = !rend1.enabled;
+            rend.enabled = rend1.enabled = !rend.enabled;
             yield return new WaitForSeconds(seconds);
         }
         rend.enabled = rend1.enabled = ableToCollide = true;
@@ -30,12 +29,14 @@ public class Collision : MonoBehaviour
     {
         float totalMovementTime = 1f;
         float currentMovementTime = 0f;
-        while (Vector3.Distance(obj.transform.position, destination) > 0)
+        while (currentMovementTime < totalMovementTime)
         {
-            currentMovementTime += Time.deltaTime;
             obj.transform.position = Vector3.Lerp(obj.transform.position, destination, currentMovementTime / totalMovementTime);
+            currentMovementTime += Time.deltaTime;
             yield return null;
         }
+        obj.transform.position = destination;
+        yield return null;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -46,7 +47,7 @@ public class Collision : MonoBehaviour
         }
         else if (other.CompareTag("Needles") && ableToCollide)
         {
-            Health.ChangeValue(-45);
+            Health.ChangeValue(-35);
             StartCoroutine(CharacterBlink(4, 0.2f));
             Handheld.Vibrate();
         }
@@ -62,15 +63,11 @@ public class Collision : MonoBehaviour
         }
         else if (other.CompareTag("Finish"))
         {
-            StartCoroutine(Health.ReduceHealthGradually(40));
-        }
-        else if (other.CompareTag("Multiplier"))
-        {
-            finish = true;
             StopCoroutine(Health.reduceHP);
+            finish = true;
             Movement.speed = 10;
+            collectibleValue = 30;
+            StartCoroutine(Health.ReduceHealthGradually(6));
         }
     }
 }
-
-

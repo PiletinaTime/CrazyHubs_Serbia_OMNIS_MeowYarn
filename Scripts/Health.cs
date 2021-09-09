@@ -40,7 +40,7 @@ public class Health : MonoBehaviour
         while (true)
         {
             ChangeValue(-amount);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(.1f);
         }
     }
 }

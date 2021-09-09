@@ -3,17 +3,17 @@ using UnityEngine;
 public class Blades : MonoBehaviour
 {
     private float firstChildMinPos,secondChildMinPos, startTime, maxPos;
-    public static float speed;
     private Transform firstChild, secondChild;
-    private void Awake()
+    public static float speed;
+    void Awake()
     {
         firstChild = transform.GetChild(0).transform;
         secondChild = transform.GetChild(1).transform;
         firstChildMinPos = firstChild.position.x;
         secondChildMinPos = secondChild.position.x;
         maxPos = firstChild.localScale.x;
-        speed = Random.Range(3, 7);
-        startTime = Random.Range(0, 4);
+        startTime = Random.Range(0, 5);
+        speed = Random.Range(3, 9);
     }
     private void Update()
     {

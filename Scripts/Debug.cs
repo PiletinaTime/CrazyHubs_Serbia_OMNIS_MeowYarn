@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Debug : MonoBehaviour
@@ -31,14 +31,12 @@ public class Debug : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI COtxt;
     [SerializeField]
-    private Slider COslider; 
+    private Slider COslider;
     [SerializeField]
     private TextMeshProUGUI FOVtxt;
     [SerializeField]
     private Slider FOVslider;
-    
-    
-    void Awake()
+    void Start()
     {
         Pslider.value = Movement.speed;
         MaxHPslider.value = Health.maxHealth;
@@ -67,18 +65,18 @@ public class Debug : MonoBehaviour
     public void UpdateCV()
     {
         CVtxt.text = "Collectible value: " + CVslider.value;
-        Collision.collectibleValue = (int)CVslider.value;
+        Collision.collectibleValue = CVslider.value;
     }
     public void UpdateNeedlesSpeed()
     {
         Ntxt.text = "Needles speed: " + Nslider.value;
-        Needles.speed = Nslider.value + ((Nslider.maxValue - Nslider.value * 2) + Nslider.minValue);
+        Needles.speed = Nslider.value + (Nslider.maxValue - Nslider.value * 2 + Nslider.minValue);
     }
     public void UpdateBladesSpeed()
     {
         Btxt.text = "Blades speed: " + Bslider.value;
-        Blades.speed = Bslider.value + ((Bslider.maxValue - Bslider.value * 2) + Bslider.minValue);
-    } 
+        Blades.speed = Bslider.value + (Bslider.maxValue - Bslider.value * 2 + Bslider.minValue);
+    }
     public void UpdateCameraOffset()
     {
         COtxt.text = "Camera offset: " + COslider.value;
@@ -98,17 +96,12 @@ public class Debug : MonoBehaviour
         MinHPslider.value = 20;
         Health.minHealth = MinHPslider.value;
         CVslider.value = 30;
-        Collision.collectibleValue = (int)CVslider.value;
+        Collision.collectibleValue = CVslider.value;
         Nslider.value = 5;
-        Needles.speed = Nslider.value + ((Nslider.maxValue - Nslider.value * 2) + Nslider.minValue);
         Bslider.value = 5;
-        Blades.speed = Bslider.value + ((Bslider.maxValue - Bslider.value * 2) + Bslider.minValue);
         COslider.value = 10;
         CameraFollow.offset = -COslider.value;
         FOVslider.value = 60;
         Camera.main.fieldOfView = FOVslider.value;
     }
 }
-
-
-
